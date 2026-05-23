@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>風動心動思辨小學堂 - 移動端 UI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#FAF8F5',
+                            100: '#F5EFE4',
+                            200: '#EAE1CE',
+                            300: '#D5C3A6',
+                        },
+                        zenGreen: {
+                            100: '#EBF2F0',
+                            200: '#D2E3DD',
+                            500: '#648E82',
+                            600: '#4E7368',
+                            700: '#38544C',
+                        },
+                        templeGold: {
+                            100: '#FFFDF0',
+                            200: '#FFF7C2',
+                            500: '#D9A441',
+                            600: '#B8842E',
+                        },
+                        soulBlue: {
+                            100: '#EDF4F9',
+                            200: '#CEE2F0',
+                            500: '#4A8BB2',
+                            600: '#336B8F',
+                        }
+                    },
+                    borderRadius: {
+                        'xl-cute': '1.25rem',
+                        '2xl-cute': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', 'Kosugi Maru', sans-serif;
+            background-color: #EDE7DC;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 滾動條美化 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D2E3DD;
+            border-radius: 10px;
+        }
+
+        /* 可愛澎澎陰影與禪意浮動 */
+        .bubble-shadow {
+            box-shadow: 0 8px 0px 0px #D5C3A6;
+        }
+        .btn-bubble {
+            box-shadow: 0 4px 0px 0px rgba(0,0,0,0.08);
+            transition: all 0.1s ease;
+        }
+        .btn-bubble:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px 0px rgba(0,0,0,0.08);
+        }
+        
+        /* 緩慢波動的風與幡旗 */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .floating-cloud {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes sway-banner {
+            0% { transform: skewX(-5deg) scaleX(0.98); }
+            50% { transform: skewX(8deg) scaleX(1.02); }
+            100% { transform: skewX(-5deg) scaleX(0.98); }
+        }
+        .swaying-banner {
+            animation: sway-banner 5s ease-in-out infinite;
+            transform-origin: top center;
+        }
+        @keyframes zen-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.15); opacity: 0.4; }
+        }
+        .zen-halo {
+            animation: zen-pulse 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen p-0 sm:p-4">
+
+    <!-- 手機模擬容器 -->
+    <div class="relative w-full max-w-md h-[844px] sm:h-[812px] bg-cream-50 sm:rounded-[40px] shadow-2xl overflow-hidden border-8 border-zenGreen-700/15 flex flex-col">
+        
+        <!-- 模擬頂部狀態列 -->
+        <div class="px-6 pt-3 pb-2 flex justify-between items-center text-xs text-zenGreen-750/40 select-none">
+            <span class="font-bold">16:15 🍃 幡 🧘‍♂️ 心</span>
+            <div class="flex items-center space-x-1.5">
+                <span>現象學還原 5G</span>
+                <span>100%🔋</span>
+            </div>
+        </div>
+
+        <!-- 頂部導航標題 -->
+        <header class="px-5 py-3 bg-cream-100 border-b-2 border-cream-200 flex items-center justify-between relative">
+            <div class="flex items-center space-x-2">
+                <!-- 禪坐蓮花 Logo -->
+                <div class="relative w-10 h-10 bg-zenGreen-500 rounded-full flex items-center justify-center text-white text-xl shadow-inner font-black">
+                    <span class="relative z-10">🧘‍♂️</span>
+                    <span class="absolute inset-0 rounded-full bg-templeGold-500/30 zen-halo"></span>
+                </div>
+                <div>
+                    <h1 class="text-base font-black text-zenGreen-700 tracking-wide">不是風動思辨小學堂</h1>
+                    <p class="text-[10px] text-zenGreen-600/70 font-bold flex items-center">
+                        <span class="inline-block w-2 h-2 rounded-full bg-templeGold-500 mr-1 animate-pulse"></span>
+                        當前單元：六祖壇經·行由品
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 可愛說明按鈕 -->
+            <button onclick="toggleHelpModal(true)" class="w-9 h-9 bg-zenGreen-50 hover:bg-zenGreen-100 border-2 border-zenGreen-500/20 text-zenGreen-600 rounded-full flex items-center justify-center font-bold text-lg btn-bubble">
+                ？
+            </button>
+            
+            <!-- 漂浮背景小雲朵 -->
+            <div class="absolute right-16 top-1 floating-cloud opacity-25 pointer-events-none">
+                <svg class="w-8 h-5 text-zenGreen-500 fill-current" viewBox="0 0 24 16"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+            </div>
+        </header>
+
+        <!-- 主要內容滾動區 -->
+        <main class="flex-1 overflow-y-auto px-4 py-4 space-y-4 pb-20 relative">
+            
+            <!-- ================= TAB 1: 結構樹 ================= -->
+            <div id="page-structure" class="space-y-4 page-content">
+                <!-- 導讀背景卡片 -->
+                <div class="bg-zenGreen-100 rounded-2xl-cute p-4 border-2 border-zenGreen-200 relative overflow-hidden">
+                    <span class="text-[10px] bg-zenGreen-600 text-white font-bold px-2.5 py-0.5 rounded-full">主體與客體之辯</span>
+                    <h2 class="text-base font-black text-zenGreen-700 mt-2">尋找感官運動的起源 🍃🏯</h2>
+                    <p class="text-xs text-zenGreen-600/80 mt-1 leading-relaxed">兩個小和尚看著飄動的幡旗，陷入了「誰在動」的無休止爭論。這是一場探討「客觀現象」與「主觀意識」如何交織的世紀辯論，點擊卡片展開探索：</p>
+                </div>
+
+                <!-- 互動結構樹容器 -->
+                <div class="space-y-3 relative pl-3 border-l-2 border-dashed border-zenGreen-500/30">
+                    
+                    <!-- 核心命題 -->
+                    <div class="relative">
+                        <div class="absolute -left-[19px] top-5 w-2.5 h-2.5 rounded-full bg-zenGreen-600 border-2 border-cream-50"></div>
+                        <div onclick="toggleCard('card-topic')" class="bg-white hover:bg-cream-100/50 p-3.5 rounded-xl-cute border-2 border-zenGreen-500/10 cursor-pointer shadow-sm transition-all">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-zenGreen-600 bg-zenGreen-50 px-2 py-0.5 rounded">🎯 核心命題</span>
+                                <span id="card-topic-icon" class="text-xs text-zenGreen-500/40">展開 ▾</span>
+                            </div>
+                            <p class="text-sm font-black text-zenGreen-700 mt-1.5">物理運動與心靈知覺（物我之別）</p>
+                            <div id="card-topic-detail" class="hidden mt-3 pt-2.5 border-t border-dashed border-zenGreen-500/10 text-xs text-zenGreen-600/70 leading-relaxed">
+                                <strong>現象學視角：</strong><br>
+                                物理世界中雖然存在風速與分子運動，但若沒有一個具備「意識」的主體去觀察、統合並定義，所謂的「動」在邏輯與心理經驗上便毫無意義。惠能並非否定物質存在，而是指明「世界因感知而呈現」。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 前提一：風動 -->
+                    <div class="relative">
+                        <div class="absolute -left-[19px] top-5 w-2.5 h-2.5 rounded-full bg-soulBlue-500 border-2 border-cream-50"></div>
+                        <div onclick="toggleCard('card-premise1')" class="bg-white hover:bg-cream-100/50 p-3.5 rounded-xl-cute border-2 border-zenGreen-500/10 cursor-pointer shadow-sm transition-all">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-soulBlue-600 bg-soulBlue-100 px-2 py-0.5 rounded">💨 前提一：因果本源推論</span>
+                                <span id="card-premise1-icon" class="text-xs text-zenGreen-500/40">展開 ▾</span>
+                            </div>
+                            <p class="text-sm font-black text-zenGreen-700 mt-1.5">「一僧曰：風動也」</p>
+                            <div id="card-premise1-detail" class="hidden mt-3 pt-2.5 border-t border-dashed border-zenGreen-500/10 text-xs text-zenGreen-600/70 leading-relaxed">
+                                <strong>唯物論的物理歸因：</strong><br>
+                                這位僧人專注於「不可見的驅動力（原因）」。他認為，風是施力者，幡是被動者，沒有風的吹拂，幡旗是不可能運動的。這代表了傳統的「刺激-反應（Stimulus-Response）」物理模型。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 前提二：幡動 -->
+                    <div class="relative">
+                        <div class="absolute -left-[19px] top-5 w-2.5 h-2.5 rounded-full bg-templeGold-500 border-2 border-cream-50"></div>
+                        <div onclick="toggleCard('card-premise2')" class="bg-white hover:bg-cream-100/50 p-3.5 rounded-xl-cute border-2 border-zenGreen-500/10 cursor-pointer shadow-sm transition-all">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-templeGold-600 bg-templeGold-100 px-2 py-0.5 rounded">🚩 前提二：經驗現象觀察</span>
+                                <span id="card-premise2-icon" class="text-xs text-zenGreen-500/40">展開 ▾</span>
+                            </div>
+                            <p class="text-sm font-black text-zenGreen-700 mt-1.5">「一僧曰：幡動也」</p>
+                            <div id="card-premise2-detail" class="hidden mt-3 pt-2.5 border-t border-dashed border-zenGreen-500/10 text-xs text-zenGreen-600/70 leading-relaxed">
+                                <strong>實證論的視覺經驗：</strong><br>
+                                這位僧人專注於「可見的客體對象（結果）」。他指出，風是看不見的，我們真正用雙眼觀測到位置位移的實體是「幡旗本身」。這代表了基於直接觀察的「客觀現象論」。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 邏輯死結 -->
+                    <div class="relative">
+                        <div class="absolute -left-[19px] top-5 w-2.5 h-2.5 rounded-full bg-red-400 border-2 border-cream-50"></div>
+                        <div onclick="toggleCard('card-conflict')" class="bg-white hover:bg-cream-100/50 p-3.5 rounded-xl-cute border-2 border-zenGreen-500/10 cursor-pointer shadow-sm transition-all">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded">⚖️ 邏輯死結：外在二元對立</span>
+                                <span id="card-conflict-icon" class="text-xs text-zenGreen-500/40">展開 ▾</span>
+                            </div>
+                            <p class="text-sm font-black text-zenGreen-700 mt-1.5">「議論不已，互不相讓」</p>
+                            <div id="card-conflict-detail" class="hidden mt-3 pt-2.5 border-t border-dashed border-zenGreen-500/10 text-xs text-zenGreen-600/70 leading-relaxed">
+                                <strong>雙重割裂：</strong><br>
+                                雙方都把「運動」視為在自身之外獨立運作的純客觀事實，陷入了「到底因重要還是果重要」的無限循環，完全忘記了自己正是這場觀察的「體驗者與定義者」。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 惠能解套：心動 -->
+                    <div class="relative">
+                        <div class="absolute -left-[19px] top-5 w-2.5 h-2.5 rounded-full bg-purple-500 border-2 border-cream-50"></div>
+                        <div onclick="toggleCard('card-conclusion')" class="bg-white hover:bg-cream-100/50 p-3.5 rounded-xl-cute border-2 border-zenGreen-500/10 cursor-pointer shadow-sm transition-all">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded">🧘‍♂️ 惠能解密：認識論革命</span>
+                                <span id="card-conclusion-icon" class="text-xs text-zenGreen-500/40">展開 ▾</span>
+                            </div>
+                            <p class="text-sm font-black text-zenGreen-700 mt-1.5">「非風動，非幡動，仁者心動」</p>
+                            <div id="card-conclusion-detail" class="hidden mt-3 pt-2.5 border-t border-dashed border-zenGreen-500/10 text-xs text-zenGreen-600/70 leading-relaxed">
+                                <strong>境由心造，物我同源：</strong><br>
+                                惠能一語道破：沒有靈性意識（心）的參與，風與幡在黑暗中只是無意義的物質寂靜。是你們的大腦進行了光影與氣壓的加工，你們的心靈在追逐着這種變化，從而產生了喧囂的論爭。這教導我們，在審視任何外界衝突前，必須先回頭反省自己的「主觀投射與認知偏誤」。
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ================= TAB 2: 思辨核心 ================= -->
+            <div id="page-core" class="hidden space-y-4 page-content">
+                
+                <!-- 意識投影與認知整合流程圖 -->
+                <div class="bg-zenGreen-100/60 p-4 rounded-2xl-cute border-2 border-zenGreen-200">
+                    <h3 class="text-xs font-black text-zenGreen-750 tracking-wider text-center uppercase mb-3">🛠 「意識與感官投影」運作圖解</h3>
+                    
+                    <div class="flex flex-col items-center space-y-2">
+                        <!-- 外部物理世界 -->
+                        <div class="bg-white border-2 border-zenGreen-500/15 px-4 py-2 rounded-xl-cute text-center max-w-[270px] w-full shadow-sm">
+                            <span class="text-[9px] text-soulBlue-600 font-bold block">1. 外部客觀物理現象 (刺激)</span>
+                            <span class="text-xs font-black text-zenGreen-700">氣壓流動 ＋ 幡旗織物位移 🍃🚩</span>
+                        </div>
+                        
+                        <!-- 往下箭頭 -->
+                        <svg class="w-4 h-4 text-zenGreen-500 fill-current animate-bounce" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+
+                        <!-- 感官過濾 -->
+                        <div class="bg-templeGold-100 border-2 border-templeGold-500/30 px-4 py-2.5 rounded-xl-cute text-center max-w-[270px] w-full">
+                            <span class="text-[9px] text-templeGold-600 font-bold block">🚨 生理生理接收系統 (感官)</span>
+                            <span class="text-xs font-black text-templeGold-600">視網膜光影折射 ＋ 皮膚觸壓覺 👁</span>
+                        </div>
+
+                        <!-- 往下箭頭 -->
+                        <svg class="w-4 h-4 text-zenGreen-500 fill-current" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+
+                        <!-- 意識畫布 -->
+                        <div class="bg-white border-2 border-zenGreen-500/15 px-4 py-2 rounded-xl-cute text-center max-w-[270px] w-full shadow-sm">
+                            <span class="text-[9px] text-purple-600 font-bold block">3. 意識畫布整合 (認知合成)</span>
+                            <span class="text-xs font-bold text-zenGreen-750">大腦虛擬建構出「動」的時空連續體驗</span>
+                        </div>
+
+                        <!-- 往下箭頭 -->
+                        <svg class="w-4 h-4 text-zenGreen-500 fill-current" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+
+                        <!-- 惠能的認知革命 -->
+                        <div class="bg-zenGreen-600 text-white px-4 py-2.5 rounded-xl-cute text-center max-w-[270px] w-full shadow-sm">
+                            <span class="text-[9px] text-zenGreen-100 font-bold block">4. 惠能大師的哲學解脫</span>
+                            <span class="text-xs font-bold">世界不是你在外部抓取到的，<br>世界是你自己心靈的投射 🧘‍♂️✨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 經典古文互動閱讀器 -->
+                <div class="bg-white rounded-2xl-cute border-2 border-zenGreen-500/10 p-4 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs bg-templeGold-100 text-templeGold-600 font-bold px-2 py-0.5 rounded">📖 《六祖壇經》原典節選</span>
+                        <span class="text-[10px] text-zenGreen-600/60 font-bold">💡 點擊虛線字詞看現代心理學解析</span>
+                    </div>
+
+                    <!-- 帶底線互動文字 -->
+                    <div class="text-zenGreen-700 text-sm leading-8 font-serif tracking-wide text-justify">
+                        時有風吹幡動。一僧曰
+                        <span onclick="showTranslation('風動', '代表「客觀物理學起因」。這僧人代表了傳統的經驗主義，認為運動的本質來自於外部物質能量的傳遞。在物理學中，他看見了不可見的力。')" class="underline decoration-wavy decoration-soulBlue-500 font-bold cursor-pointer text-soulBlue-600 bg-soulBlue-100/50 px-1 rounded hover:bg-soulBlue-100">風動</span>
+                        ，一僧曰
+                        <span onclick="showTranslation('幡動', '代表「主體視覺現象」。這僧人代表了實證主義，主張我們只相信直接用肉眼感知、測量到的視覺位移。在物理學中，他看見了具體的物質對象。')" class="underline decoration-wavy decoration-templeGold-500 font-bold cursor-pointer text-templeGold-600 bg-templeGold-100/50 px-1 rounded hover:bg-templeGold-100">幡動</span>
+                        ，
+                        <span onclick="showTranslation('議論不已', '兩僧陷入了二元論的死結，爭執不休。這在西方哲學史中，正如同唯心論與唯物論、理性主義與經驗主義的長期鬥爭，雙方均從局部事實出發，企圖以一概全。')" class="underline decoration-wavy decoration-red-400 font-bold cursor-pointer text-red-500 bg-red-100/40 px-1 rounded hover:bg-red-100">議論不已</span>
+                        。惠能進曰：「非風動，非幡動，
+                        <span onclick="showTranslation('仁者心動', '這是認識論的終極躍遷。惠能指出：風和幡的「動」，本質上是你自己眼根、身根接收到刺激後，大腦與心智意識（心）在自我世界中解碼與渲染出來的幻覺。你們的爭吵與執著，正是你們心靈隨之起舞（心動）的鐵證。')" class="underline decoration-wavy decoration-purple-500 font-bold cursor-pointer text-purple-600 bg-purple-50 px-1 rounded hover:bg-purple-100">仁者心動</span>
+                        。」
+                    </div>
+
+                    <!-- 動態翻譯卡片 (默認隱藏) -->
+                    <div id="translation-card" class="hidden mt-4 p-3 bg-cream-100 border-2 border-dashed border-zenGreen-500/20 rounded-xl-cute transition-all duration-300">
+                        <div class="flex justify-between items-center mb-1">
+                            <span id="trans-word" class="text-xs font-black text-zenGreen-600">詞組：</span>
+                            <button onclick="closeTranslation()" class="text-xs text-zenGreen-500/40 hover:text-zenGreen-700">關閉 ✕</button>
+                        </div>
+                        <p id="trans-text" class="text-xs text-zenGreen-600/85 leading-relaxed font-bold">翻譯解說載入中...</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- ================= TAB 3: 思辨工具 ================= -->
+            <div id="page-tools" class="hidden space-y-4 page-content">
+                
+                <!-- 邏輯謬誤檢測機 -->
+                <div class="bg-white rounded-2xl-cute border-2 border-zenGreen-500/10 p-4 shadow-sm">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="text-xl">🤖</span>
+                        <h3 class="text-sm font-black text-zenGreen-700">現代生活「主觀投射（心動）」檢測機</h3>
+                    </div>
+                    <p class="text-xs text-zenGreen-600/60 mb-3">日常生活中，我們常常如同這兩個爭辯風幡的僧人，將内心的「主觀情緒」與「預設立場」錯當成外界的「客觀事實」。請點擊檢測你的偏誤：</p>
+                    
+                    <!-- 預設選項 -->
+                    <div class="space-y-2">
+                        <button onclick="detectFallacy(1)" class="w-full text-left p-2.5 text-xs bg-cream-100 hover:bg-zenGreen-100/50 border border-zenGreen-500/10 rounded-lg font-bold text-zenGreen-700 flex justify-between items-center transition-all">
+                            <span>💬 「今天股市大崩盤！這根本是世界末日的徵兆，所有的科技文明全要完蛋了，真是絕望至極！」</span>
+                            <span class="text-zenGreen-500/40">分析 ➔</span>
+                        </button>
+                        <button onclick="detectFallacy(2)" class="w-full text-left p-2.5 text-xs bg-cream-100 hover:bg-zenGreen-100/50 border border-zenGreen-500/10 rounded-lg font-bold text-zenGreen-700 flex justify-between items-center transition-all">
+                            <span>💬 「剛剛主管經過我辦公桌時嘆了口氣，他肯定是看我很不順眼，正準備在試用期結束前把我開除！」</span>
+                            <span class="text-zenGreen-500/40">分析 ➔</span>
+                        </button>
+                        <button onclick="detectFallacy(3)" class="w-full text-left p-2.5 text-xs bg-cream-100 hover:bg-zenGreen-100/50 border border-zenGreen-500/10 rounded-lg font-bold text-zenGreen-700 flex justify-between items-center transition-all">
+                            <span>💬 「都是因為這台舊手機速度太慢，害我一整天都心情煩躁、焦慮不堪！只要換了最新的昂貴手機，我的生活就會無比幸福！」</span>
+                            <span class="text-zenGreen-500/40">分析 ➔</span>
+                        </button>
+                    </div>
+
+                    <!-- 檢測結果面板 -->
+                    <div id="fallacy-result" class="hidden mt-4 p-3.5 bg-zenGreen-100 rounded-xl-cute border-2 border-zenGreen-500/20">
+                        <h4 id="fallacy-title" class="text-xs font-black text-zenGreen-600">檢測結果：訴諸主觀投射謬誤</h4>
+                        <p id="fallacy-desc" class="text-xs text-zenGreen-600/80 mt-1.5 leading-relaxed font-bold">說明...</p>
+                    </div>
+                </div>
+
+                <!-- 思辨小測試 -->
+                <div class="bg-white rounded-2xl-cute border-2 border-zenGreen-500/10 p-4 shadow-sm">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl">🏆</span>
+                            <h3 class="text-sm font-black text-zenGreen-700">今日禪學挑戰賽</h3>
+                        </div>
+                        <span class="text-[10px] bg-templeGold-200 text-templeGold-600 font-extrabold px-1.5 py-0.5 rounded-full">+15 積分</span>
+                    </div>
+                    
+                    <p class="text-xs font-bold text-zenGreen-600 mb-3">【題目】惠能說「不是風動，不是幡動，仁者心動」，在生活修養和思維訓練中，它最核心的現代智慧是什麼？</p>
+                    
+                    <!-- 選項按鈕 -->
+                    <div class="space-y-2">
+                        <button onclick="answerQuiz(this, false)" class="quiz-option w-full text-left p-2.5 text-xs bg-cream-100 hover:bg-cream-200/50 border border-zenGreen-500/10 rounded-lg font-bold text-zenGreen-700 transition-all">
+                            A) 唯物世界觀：證明只要大腦不去思考，風跟旗子在客觀世界中就會停止飄動。
+                        </button>
+                        <button onclick="answerQuiz(this, true)" class="quiz-option w-full text-left p-2.5 text-xs bg-cream-100 hover:bg-cream-200/50 border border-zenGreen-500/10 rounded-lg font-bold text-zenGreen-700 transition-all">
+                            B) 主觀認知的自省力量：提醒我們，許多外界的痛苦、焦慮與紛爭（議論不已），本質上並非來自物理世界的變化（風動幡動），而是我們内心執著、過度聯想與情緒偏誤的投射（心動）。學會控制、淨化内心的念頭，才能不被外在干擾綁架。
+                        </button>
+                        <button onclick="answerQuiz(this, false)" class="quiz-option w-full text-left p-2.5 text-xs bg-cream-100 hover:bg-cream-200/50 border border-zenGreen-500/10 rounded-lg font-bold text-zenGreen-700 transition-all">
+                            C) 辯論的話術：傳授給僧人一套絕對無法被科學證偽的玄學詭辯術，用來在學術大會中強行取勝。
+                        </button>
+                    </div>
+
+                    <div id="quiz-feedback" class="hidden mt-3 text-xs font-bold text-center"></div>
+                </div>
+
+            </div>
+
+
+            <!-- ================= TAB 4: 我的筆記 ================= -->
+            <div id="page-notes" class="hidden space-y-4 page-content">
+                
+                <!-- 筆記編輯面板 -->
+                <div class="bg-white rounded-2xl-cute border-2 border-zenGreen-500/10 p-4 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl">✍️</span>
+                            <h3 class="text-sm font-black text-zenGreen-700">禪定隨筆記</h3>
+                        </div>
+                        <span class="text-[10px] text-zenGreen-600/40">自動存檔</span>
+                    </div>
+
+                    <!-- 可愛印章選擇 -->
+                    <div class="flex space-x-2 mb-3">
+                        <span class="text-xs text-zenGreen-600/60 self-center font-bold">貼上標籤:</span>
+                        <button onclick="addStamp('🛡️ 主觀投射')" class="bg-zenGreen-100 hover:bg-zenGreen-200 text-zenGreen-600 text-xs px-2 py-1 rounded-full font-bold btn-bubble">🛡️ 主觀投射</button>
+                        <button onclick="addStamp('🧠 境隨心轉')" class="bg-templeGold-100 hover:bg-templeGold-200 text-templeGold-700 text-xs px-2 py-1 rounded-full font-bold btn-bubble">🧠 境隨心轉</button>
+                    </div>
+
+                    <textarea id="note-input" rows="4" class="w-full p-3 bg-cream-100 border-2 border-dashed border-zenGreen-500/20 rounded-xl-cute text-xs text-zenGreen-700 focus:outline-none focus:border-zenGreen-600 font-bold" placeholder="在此記下你的心靈實證、情緒投射的反思心得吧..."></textarea>
+                    
+                    <button onclick="saveNote()" class="mt-3 w-full py-2.5 bg-zenGreen-600 hover:bg-zenGreen-700 text-white font-black text-xs rounded-xl-cute btn-bubble">
+                        寫入心靈竹簡 💾
+                    </button>
+                </div>
+
+                <!-- 筆記歷史列表 -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-black text-zenGreen-600/80 px-1">🗂 已保存的思辨竹簡</h3>
+                    <div id="notes-list" class="space-y-2">
+                        <!-- 默認筆記 1 -->
+                        <div class="bg-templeGold-100 p-3.5 rounded-xl-cute border border-templeGold-200 relative overflow-hidden">
+                            <div class="absolute right-2 top-2 text-[10px] bg-templeGold-200 text-templeGold-600 px-1.5 py-0.5 rounded-full font-bold">🧠 境隨心轉</div>
+                            <p class="text-xs text-zenGreen-700 font-bold leading-relaxed mt-2">
+                                「不是風動，不是幡動，仁者心動」不僅是東方的宗教哲學，更是現代認知神經科學與心理學的最完美表述。我們大腦的感官皮質在接收到微弱的電化學信號時，都是在心靈的「虛擬畫布」上將其重新解構與渲染。物理世界的變化（風與幡的運動）是無常且客觀存在的，然而將其詮釋為「美好」、「糟糕」、「痛苦」或「無望」，完全是由我們內在的「心靈認知系統（Schema）」決定的。如果能認識到我們所經歷的焦慮和不安，其本源在於「心動」——自己對外界過度的情緒投射與反應，我們就能跳脫外在環境的裹挾，掌握自己生命的主權，這才是心靈解脫的最高理性。
+                            </p>
+                            <span class="block text-[10px] text-zenGreen-500/40 mt-2">經典導讀歸檔</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- 可愛說明彈窗 (Help Modal) -->
+        <div id="help-modal" class="hidden absolute inset-0 bg-zenGreen-700/40 backdrop-blur-sm z-30 flex justify-center items-center p-6">
+            <div class="bg-white w-full max-w-xs rounded-3xl-cute border-4 border-templeGold-200 p-5 shadow-2xl relative">
+                <button onclick="toggleHelpModal(false)" class="absolute right-4 top-4 w-7 h-7 bg-cream-100 text-zenGreen-700 rounded-full font-bold text-xs flex items-center justify-center border hover:bg-cream-200">✕</button>
+                
+                <div class="text-center space-y-3 mt-2">
+                    <span class="text-4xl">🎒</span>
+                    <h3 class="text-base font-black text-zenGreen-700">怎麼遊玩思辨小學堂？</h3>
+                    <p class="text-xs text-zenGreen-600/80 leading-relaxed font-bold">
+                        本系統專為「經典哲學與認知科學」的交互解碼設計！
+                    </p>
+                    <ul class="text-left text-xs text-zenGreen-600/80 space-y-1.5 list-disc list-inside font-bold bg-cream-100 p-3 rounded-xl-cute border border-cream-200">
+                        <li>在「因果結構」中展開卡片，拆解主體客體、唯心唯物之辯</li>
+                        <li>在「原典節選」中點擊帶虛線字詞，看現代現象學大解碼</li>
+                        <li>在「心動檢測機」中診斷日常生活中的主觀焦慮與過度解讀謬誤</li>
+                        <li>在「思辨隨筆」上記錄下你擺脫環境外境裹挾的自我修行吧</li>
+                    </ul>
+                    <button onclick="toggleHelpModal(false)" class="w-full py-2 bg-zenGreen-600 hover:bg-zenGreen-700 text-white font-black text-xs rounded-xl-cute btn-bubble">
+                        我知道了！開啟心靈覺醒！
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 全局自訂可愛提示框 -->
+        <div id="custom-toast" class="hidden absolute top-16 left-1/2 transform -translate-x-1/2 bg-zenGreen-700/90 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg z-50 flex items-center space-x-1">
+            <span id="toast-icon">✨</span>
+            <span id="toast-msg">筆記已保存！</span>
+        </div>
+
+        <!-- 底部導航欄 -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t-2 border-cream-200 py-2.5 px-4 flex justify-around items-center z-20">
+            <!-- Tab 1: 結構 -->
+            <button onclick="switchTab('structure')" id="nav-structure" class="nav-btn flex flex-col items-center space-y-0.5 text-zenGreen-600 font-black">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/></svg>
+                <span class="text-[10px]">物我結構</span>
+            </button>
+
+            <!-- Tab 2: 核心 -->
+            <button onclick="switchTab('core')" id="nav-core" class="nav-btn flex flex-col items-center space-y-0.5 text-zenGreen-600/40 font-bold hover:text-zenGreen-600">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.1-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.35-.75-2-1zM3 18.5V7c1.1-.35 2.3-.5 3.5-.5 1.35 0 2.8.25 4 .75v11.5c-1.2-.5-2.65-.75-4-.75-1.2 0-2.4.15-3.5.5zm18 0c-1.1-.35-2.3-.5-3.5-.5-1.35 0-2.8.25-4 .75V7.25c1.2-.5 2.65-.75 4-.75 1.2 0 2.4.15 3.5.5v11.5z"/></svg>
+                <span class="text-[10px]">壇經原典</span>
+            </button>
+
+            <!-- Tab 3: 工具 -->
+            <button onclick="switchTab('tools')" id="nav-tools" class="nav-btn flex flex-col items-center space-y-0.5 text-zenGreen-600/40 font-bold hover:text-zenGreen-600">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                <span class="text-[10px]">心動偏誤</span>
+            </button>
+
+            <!-- Tab 4: 筆記 -->
+            <button onclick="switchTab('notes')" id="nav-notes" class="nav-btn flex flex-col items-center space-y-0.5 text-zenGreen-600/40 font-bold hover:text-zenGreen-600">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                <span class="text-[10px]">思辨隨筆</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- 內置 JS 邏輯處理 -->
+    <script>
+        // 1. Tab 切換功能
+        function switchTab(tabId) {
+            // 隱藏所有頁面
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            // 顯示當前選定頁面
+            document.getElementById(`page-${tabId}`).classList.remove('hidden');
+
+            // 重置所有 Nav 按鈕樣式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-zenGreen-600', 'font-black');
+                btn.classList.add('text-zenGreen-600/40', 'font-bold');
+            });
+            // 激活當前按鈕樣式
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            activeNav.classList.remove('text-zenGreen-600/40', 'font-bold');
+            activeNav.classList.add('text-zenGreen-600', 'font-black');
+        }
+
+        // 2. 結構樹卡片展開/收起
+        function toggleCard(cardId) {
+            const detail = document.getElementById(`${cardId}-detail`);
+            const icon = document.getElementById(`${cardId}-icon`);
+            if (detail.classList.contains('hidden')) {
+                detail.classList.remove('hidden');
+                icon.innerText = '收起 ▴';
+            } else {
+                detail.classList.add('hidden');
+                icon.innerText = '展開 ▾';
+            }
+        }
+
+        // 3. 古文閱讀互動器（查看翻譯與邏輯解說）
+        function showTranslation(word, text) {
+            const card = document.getElementById('translation-card');
+            const transWord = document.getElementById('trans-word');
+            const transText = document.getElementById('trans-text');
+            
+            transWord.innerText = `💡 現象學剖析：【${word}】`;
+            transText.innerText = text;
+            card.classList.remove('hidden');
+        }
+
+        function closeTranslation() {
+            document.getElementById('translation-card').classList.add('hidden');
+        }
+
+        // 4. 邏輯謬誤檢測
+        function detectFallacy(type) {
+            const resultBox = document.getElementById('fallacy-result');
+            const title = document.getElementById('fallacy-title');
+            const desc = document.getElementById('fallacy-desc');
+
+            resultBox.classList.remove('hidden');
+
+            if (type === 1) {
+                title.innerText = '🤖 檢測結果：客觀崩潰與災難化思維投影 (Projection & Catastrophizing)';
+                desc.innerText = '這犯了典型「心動」偏誤！股市暴跌（風吹）是客觀經濟週期的常規變動（物理現象）。然而將其詮釋為「末日將至，希望全無」，則是您的恐懼與焦慮（心）在無限放大投射。經濟波動並不等於您的生命毀滅，學會將「客觀事件」與「主觀詮釋」剝離，大腦才不會隨之「起舞紛爭」。';
+            } else if (type === 2) {
+                title.innerText = '🤖 檢測結果：讀心術與防禦投射偏差 (Mind-reading Projection Bias)';
+                desc.innerText = '這在心理學上屬於「關係妄自投射」。主管經過並嘆氣（幡動），可能只是因為他自己疲憊、家庭琐事或工作壓力（與您無關）。您卻將內心的不安全感、對自我能力的懷疑（心），直接投影並渲染為「他看我不順眼、要開除我」，這是一場自導自演的「心靈內耗」。';
+            } else if (type === 3) {
+                title.innerText = '🤖 檢測結果：物質還原謬誤與外在歸因偏差 (Material Reductionism & Extrinsic Fallacy)';
+                desc.innerText = '這與小和尚只看見「幡在動」如出一轍。您將內心的煩躁與不幸福完全怪罪於外物（舊手機/環境），誤以為買了新手機（外物重置）就能一勞永逸地解決焦慮。實際上，只要心底的攀比、焦躁和慾望沒有消除，即使換了最新款，幸福的快感也只會維持幾天。幸福與寧靜，始終是「修心」的內在功課。';
+            }
+        }
+
+        // 5. 思辨小測試互動
+        let quizAnswered = false;
+        function answerQuiz(btn, isCorrect) {
+            if (quizAnswered) return; // 避免重複作答
+
+            const feedback = document.getElementById('quiz-feedback');
+            
+            // 變更所有選項外觀
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.add('opacity-50');
+            });
+            btn.classList.remove('opacity-50');
+
+            if (isCorrect) {
+                btn.classList.remove('bg-cream-100');
+                btn.classList.add('bg-zenGreen-100', 'border-zenGreen-500');
+                feedback.innerHTML = '🎉 太有慧根了！回答正確！<br><span class="text-[11px] font-normal text-zenGreen-700">這正是禪宗最具突破性的「認知重構」。我們生活在一個外界環境不斷變化、各種物理力量（風動）與物質對象（幡動）交錯的動態宇宙中。我們無法徹底控制外部環境。然而，我們大腦中的一切煩惱、偏見、喜悅與憤怒，其真正的源頭是我們自己靈性意識對這些外界事件進行的「二次加工」和「情緒投射」（心動）。當你能看透「境隨心轉」的原理，不再盲目隨外界風吹幡動而產生內心執著與情緒對立，就代表你拿回了心靈的「自主權」，這正是最具現代心理學自省意義的高維智慧！</span>';
+                feedback.className = 'mt-3 text-xs font-bold text-zenGreen-700 block';
+                showToast('✨ 挑戰成功！獲得 15 積分！');
+            } else {
+                btn.classList.remove('bg-cream-100');
+                btn.classList.add('bg-red-200', 'border-red-500');
+                feedback.innerHTML = '❌ 差了一點點！請再深入禪思看看！<br><span class="text-[11px] font-normal text-zenGreen-600">提示：惠能大師提出「心動」，絕不是在宣揚偽科學的荒謬唯心超能力（比如用意念阻擋風吹），而是在釐清我們在看待痛苦、偏見與爭論時，真正的控制核心應該向內尋求（觀察自己的認知機制）。</span>';
+                feedback.className = 'mt-3 text-xs font-bold text-red-600 block';
+                showToast('😢 答錯囉，請再想想！');
+            }
+            quizAnswered = true;
+        }
+
+        // 6. 筆記本添加印章
+        function addStamp(stampText) {
+            const input = document.getElementById('note-input');
+            input.value = `[${stampText}] ` + input.value;
+            input.focus();
+            showToast(`已蓋上「${stampText}」印章！`);
+        }
+
+        // 7. 保存筆記
+        function saveNote() {
+            const input = document.getElementById('note-input');
+            const text = input.value.trim();
+            if (!text) {
+                showToast('❌ 請寫下一點心照思索再儲存喔！');
+                return;
+            }
+
+            const notesList = document.getElementById('notes-list');
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // 隨機一個背景色使筆記看來活潑
+            const bgClasses = ['bg-zenGreen-100/60', 'bg-templeGold-100/60', 'bg-cream-100'];
+            const randomBg = bgClasses[Math.floor(Math.random() * bgClasses.length)];
+
+            // 建立新的筆記節點
+            const noteNode = document.createElement('div');
+            noteNode.className = `${randomBg} p-3.5 rounded-xl-cute border border-zenGreen-500/10 relative overflow-hidden transition-all duration-300`;
+            noteNode.innerHTML = `
+                <p class="text-xs text-zenGreen-750 font-bold leading-relaxed">${text}</p>
+                <span class="block text-[10px] text-zenGreen-500/40 mt-2">創建於 ${timeStr}</span>
+            `;
+
+            // 插入到最前面
+            notesList.insertBefore(noteNode, notesList.firstChild);
+
+            // 清空輸入框
+            input.value = '';
+            showToast('💾 筆記已成功儲存入心靈竹簡！');
+        }
+
+        // 8. 頂部說明彈窗控制
+        function toggleHelpModal(show) {
+            const modal = document.getElementById('help-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // 9. 可愛提示框 (Toast)
+        function showToast(message) {
+            const toast = document.getElementById('custom-toast');
+            const msgSpan = document.getElementById('toast-msg');
+            msgSpan.innerText = message;
+            
+            toast.classList.remove('hidden');
+            toast.style.opacity = '1';
+            
+            // 2.5秒後自動淡出
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
